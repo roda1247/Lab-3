@@ -1,3 +1,15 @@
+---
+title: "Lab 3"
+author: "Bianca Rodas"
+date: "Feb. 23, 2025"
+format: html
+self-contained: true
+editor: source
+embed-resources: true
+code-tools: true
+echo: true
+---
+
 # Part 1: Setup
 
 ## GitHub Workflow
@@ -39,7 +51,8 @@ In the code chunk below, load in the packages necessary for your analysis. You s
 
 ```{r}
 #| label: setup
-
+#install.packages("tidyverse")
+library(tidyverse)
 ```
 
 # Part 2: Data Context
@@ -72,16 +85,18 @@ We are going to use the `read_csv()` function to load in the `surveys.csv` datas
 #| label: load-data
 
 surveys <- read_csv("data/surveys.csv")
-#glimpse(surveys)
+glimpse(surveys)
 ```
 
 **1. What are the dimensions (# of rows and columns) of these data?**
 
 <!-- Run the commented code in the load-data chunk to address this question!  -->
+> dimensions are 30,463 X 15  
 
 **2. What are the data types of the variables in this dataset?**
 
 <!-- Run the commented code in the load-data chunk to address this question!  -->
+> They consist of numbers, characters and dates.  
 
 # Part 3: Exploratory Data Analysis with **`ggplot2`**
 
@@ -106,7 +121,14 @@ Let's get started!
 
 ```{r}
 #| label: scatterplot
-
+ggplot(data=surveys,
+       mapping =aes(x=weight, y=hindfoot_length))+
+  geom_point(alpha=0.2)+
+  labs(title="Hindfoot Length Increases with Weight",
+       subtitle="Hindfoot Length (mm)",
+       x="Weight (g)",
+       y="")+
+  facet_wrap(~species)
 ```
 
 We can see there are **a lot** of points plotted on top of each other. Let's try and modify this plot to extract more information from it.
@@ -135,7 +157,12 @@ It takes a larger cognitive load to read text that is rotated. It is common prac
 
 ```{r}
 #| label: boxplot
-
+ggplot(data=surveys,
+       aes(x=species, y= weight, color=species))+
+  theme(axis.text.x = element_text(angle=45))+ #https://stackoverflow.com/questions/66689396/customize-ggplot-axis-text 
+  geom_boxplot(outlier.shape = NA)+ #https://stackoverflow.com/questions/5677885/ignore-outliers-in-ggplot2-boxplot
+  geom_jitter(alpha=0.2)+
+  scale_color_viridis_d()
 
 ```
 
@@ -164,12 +191,14 @@ Great! Now that you can see the points, you should notice something odd: there a
 **13. Inspect the help file for `geom_boxplot()` and see how you can remove the outliers from being plotted by `geom_boxplot()`. Make this change in your code!**
 
 <!-- Continue to modify the plot you made for question 9! -->
+>https://stackoverflow.com/questions/5677885/ignore-outliers-in-ggplot2-boxplot  
 
 Some small changes can make **big** differences to plots. One of these changes are better labels for a plot's axes and legend.
 
 **14. Modify the $x$-axis and $y$-axis labels to describe what is being plotted. Be sure to include any necessary units! You might also be getting overlap in the species names -- use `theme(axis.text.x = ____)` or `theme(axis.text.y = ____)` to turn the species axis labels 45 degrees.**
 
 <!-- Continue to modify the plot you made for question 10! -->
+>https://stackoverflow.com/questions/66689396/customize-ggplot-axis-text 
 
 Some people (and journals) prefer for boxplots to be stacked with a specific orientation! Let's practice changing the orientation of our boxplots.
 
@@ -177,12 +206,17 @@ Some people (and journals) prefer for boxplots to be stacked with a specific ori
 
 ```{r}
 #| label: rotated-boxplot
-
+ggplot(data=surveys,
+       aes(y=species, x= weight, color=species))+
+  theme(axis.text.y = element_text(angle=45))+
+  geom_boxplot(outlier.shape = NA)+
+  geom_jitter(alpha=0.2)+
+  scale_color_viridis_d()
 ```
 
 Notice how vertically stacked boxplots make the species labels more readable than horizontally stacked boxplots (even when the axis labels are rotated). This is good practice!
 
-
+> I only needed to find resources for 2 questions.  
 
 # Lab 3 Submission
 
